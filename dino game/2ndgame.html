@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2nd game</title>
+</head>
+
+<body style="margin: 0">
+    <canvas id='canvas'></canvas>
+
+    <script>
+        //key-event
+        window.addEventListener("keydown", moveSomething, false);
+
+        function moveSomething(e) {
+            switch (e.keyCode) {
+                case 32:
+                    // space bar
+                    dinoX += 5;
+                    dino_type = 2;
+                    break;
+                case 65: //A
+                    dinoX -= 20;
+                    break;
+                case 13: //enter
+                    dino_type = 3;
+                    break;
+                case 16: //shift
+                    break;
+                case 27: //Esc (for cheat code)
+                    break;
+                case 20:
+            }
+        }
+
+        window.addEventListener("keyup", downevent, false);
+
+        function downevent(k) {
+            switch (k.keyCode) {
+                case 32:
+                    // space bar
+                    dino_type = 1;
+                    break;
+                    // case 13:   //enter
+                    //     dino_type = 1;
+                    //     break;
+            }
+        }
+
+
+        var canwid = 1355;
+        var canhei = 645;
+        var x = 0;
+        var rn = 1;
+        var canvas = document.getElementById('canvas');
+        canvas.width = canwid;
+        canvas.height = canhei;
+        var ctx = canvas.getContext('2d');
+
+        var i = 1,
+            k = 1;
+        var cactX = canwid,
+            skelX = canwid + 200;
+        var dino_type = 1;
+        var xbg = 0,
+            xbg_be = 0;
+        var dinoX = 0,
+            dinoY = 330;
+        var j = 1;
+        var curframe = 0;
+
+        // Background movement
+        function bg_belowfn() {
+            var bg = './png/bg_below.jpg';
+            var bgimg = new Image();
+            bgimg.src = bg;
+            ctx.drawImage(bgimg, xbg_be, 0, canwid, canhei - 178);
+            xbg_be -= 1.5;
+            ctx.drawImage(bgimg, xbg_be + canwid, 0, canwid, canhei - 178);
+            if (xbg_be < (-1 * canwid)) {
+                xbg_be = 0;
+            }
+        }
+
+        function bg_mov() {
+            var bg = './png/greenbg.jpg';
+            var bgimg = new Image();
+            bgimg.src = bg;
+            ctx.drawImage(bgimg, xbg, 0, canwid, canhei);
+            xbg -= 3.5;
+            ctx.drawImage(bgimg, xbg + canwid, 0, canwid, canhei);
+            if (xbg < (-1 * canwid)) {
+                xbg = 0;
+            }
+
+        }
+
+        // Walk
+        function dino_walk() {
+            // this.canvasContext.drawImage(image, 0, 0);
+            var dino_nam = './png/Walk (' + i + ').png';
+            var dino_img = new Image();
+            dino_img.src = dino_nam;
+            ctx.drawImage(dino_img, dinoX, 330, 180, 200);
+
+        }
+
+        function walk1() {
+            i += 1;
+            if (i == 11) {
+                i = 1;
+            }
+        }
+
+        // Run
+        function Run1() {
+            var dino_nam = './png/Run (' + j + ').png';
+            var dino_img = new Image();
+            dino_img.src = dino_nam;
+            ctx.drawImage(dino_img, dinoX, 330, 180, 200);
+        }
+
+        function Run_move() {
+            j += 1;
+            if (j == 9) {
+                j = 1;
+            }
+        }
+
+        //Jump
+        function jump1() {
+            var dino_nam = './png/Jump (' + k + ').png';
+            var dino_img = new Image();
+            dino_img.src = dino_nam;
+            ctx.drawImage(dino_img, dinoX, dinoY, 180, 200);
+        }
+
+        function Jump_move() {
+            dinoX += 20;
+
+            k += 1;
+            if (k < 7) {
+                dinoY -= 40;
+            }
+            if (k >= 7 && k < 13) {
+                dinoY += 40;
+            }
+            if (k == 13) {
+                dinoY = 330;
+                k = 1;
+                dino_type = 1;
+            }
+        }
+
+        //Cactus
+        function Cactus1() {
+            var dino_nam = './Objects/Cactus (1).png';
+            var dino_img = new Image();
+            dino_img.src = dino_nam;
+            ctx.drawImage(dino_img, cactX, 380, 100, 130);
+            cactX -= 3.5;
+            if (cactX < -200) {
+                cactX = canwid;
+            }
+        }
+
+        //Skeleton
+        function Skeleton1() {
+            var dino_nam = './Objects/Skeleton.png';
+            var dino_img = new Image();
+            dino_img.src = dino_nam;
+            ctx.drawImage(dino_img, skelX, 440, 130, 50);
+            skelX -= 1.5;
+            if (skelX < -200) {
+                skelX = canwid;
+            }
+        }
+
+
+        // gameloop
+        function drawImage() {
+
+            bg_mov();
+            bg_belowfn();
+            Cactus1();
+            Skeleton1();
+
+            switch (dino_type) {
+                case 1:
+                    // dino_walk();
+                    Run1();
+
+                    break;
+                case 2: //A
+                    // if(rn==2){
+                    Run1();
+                    // }
+                    break;
+                case 3: //enter
+                    jump1();
+                    break;
+                case 4: //shift
+                    break;
+                case 27: //Esc (for cheat code)
+                    break;
+                case 20:
+            }
+
+        }
+        setInterval(function () {
+            //  walk1(); 
+            switch (dino_type) {
+                case 1:
+                    // walk1();
+                    Run_move();
+                    break;
+                case 2: //A
+                    Run_move();
+                    break;
+                case 3: //enter
+                    Jump_move();
+                    break;
+                case 4: //shift
+                    break;
+                case 27: //Esc (for cheat code)
+                    break;
+                case 20:
+            }
+        }, 70);
+        setInterval(function () {
+            drawImage();
+        }, 00);
+    </script>
+</body>
+
+</html>
